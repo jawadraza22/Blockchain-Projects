@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jamhuriat | Pakistan's Blockchain Election System</title>
+  <meta name="description"
+    content="Jamhuriat is a decentralized election platform for Pakistan, ensuring transparency, security, and integrity through blockchain technology." />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+  <canvas id="bgCanvas"></canvas>
+  <div class="mesh-gradient"></div>
+
+  <!-- ░░ NAVIGATION ░░ -->
+  <nav id="navbar">
+    <div class="nav-brand">
+      <div class="brand-logo">
+        <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
+      </div>
+      <div class="brand-name">
+        <span class="bn-en">JAMHURIAT</span>
+        <span class="bn-urdu">جمہوریت</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="status-indicator">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Not Connected</span>
+      </div>
+      <button class="btn-connect" id="connectBtn" onclick="connectWallet()">
+        <i data-lucide="wallet" style="width: 18px; height: 18px;"></i>
+        <span>Connect Wallet</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ░░ HERO ░░ -->
+  <header id="hero">
+    <span class="hero-tag">
+      <i data-lucide="cpu" style="width: 14px; height: 14px; margin-right: 5px;"></i>
+      DEMOCRACY 3.0 · POWERED BY BLOCKCHAIN
+    </span>
+    <h1 class="hero-title">
+      <span>Pakistan's</span>
+      <span class="gradient-text">Digital Vote</span>
+    </h1>
+    <p class="hero-desc">Secure, immutable, and transparent election infrastructure designed for the people of Pakistan.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-icon"><i data-lucide="users"></i></div>
+        <span class="stat-value" id="statVoters">0</span>
+        <span class="stat-label">Verified Voters</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i data-lucide="user-check"></i></div>
+        <span class="stat-value" id="statCandidates">0</span>
+        <span class="stat-label">Candidates</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i data-lucide="vote"></i></div>
+        <span class="stat-value" id="statVotes">0</span>
+        <span class="stat-label">Total Votes</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ░░ MAIN CONTENT ░░ -->
+  <main id="main-content">
+    <nav class="tabs-nav">
+      <button class="tab-btn active" onclick="showPanel('voter')">
+        <i data-lucide="user-plus"></i> Voter Registration
+      </button>
+      <button class="tab-btn" onclick="showPanel('candidate')">
+        <i data-lucide="award"></i> Candidate Portal
+      </button>
+      <button class="tab-btn" onclick="showPanel('vote')">
+        <i data-lucide="check-square"></i> Cast Vote
+      </button>
+      <button class="tab-btn" onclick="showPanel('results')">
+        <i data-lucide="bar-chart-3"></i> Live Results
+      </button>
+      <button class="tab-btn" onclick="showPanel('admin')">
+        <i data-lucide="settings"></i> Commission
+      </button>
+    </nav>
+
+    <!-- Voter Panel -->
+    <div class="panel active" id="panel-voter">
+      <div class="glass-card">
+        <div class="card-header">
+          <i data-lucide="user-plus" class="header-icon"></i>
+          <h2>Voter Enrollment</h2>
+        </div>
+        <p style="color: var(--text-dim); margin-bottom: 40px;">Register your CNIC on the blockchain to participate in
+          the democratic process.</p>
+        <div class="form-grid">
+          <div class="field">
+            <label><i data-lucide="credit-card"></i> CNIC Number (13 Digits)</label>
+            <input type="text" id="v-id" placeholder="3520112345678" maxlength="13" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="user"></i> Full Name (As per CNIC)</label>
+            <input type="text" id="v-name" placeholder="Muhammad Ahmed" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="calendar"></i> Age</label>
+            <input type="number" id="v-age" placeholder="18" min="18" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="map-pin"></i> Province</label>
+            <select id="v-region">
+              <option value="">Select Province</option>
+              <option>Punjab</option>
+              <option>Sindh</option>
+              <option>Khyber Pakhtunkhwa</option>
+              <option>Balochistan</option>
+              <option>Gilgit-Baltistan</option>
+              <option>Azad Jammu & Kashmir</option>
+              <option>Islamabad Capital Territory</option>
+            </select>
+          </div>
+          <div class="field full">
+            <button class="btn-primary" onclick="registerVoter()">
+              <i data-lucide="shield-check"></i> Register My Vote
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidate Panel -->
+    <div class="panel" id="panel-candidate">
+      <div class="glass-card">
+        <div class="card-header">
+          <i data-lucide="award" class="header-icon"></i>
+          <h2>Candidate Registration</h2>
+        </div>
+        <p style="color: var(--text-dim); margin-bottom: 40px;">Submit your nomination for on-chain verification by the
+          Election Commission.</p>
+        <div class="form-grid">
+          <div class="field">
+            <label><i data-lucide="credit-card"></i> CNIC Number</label>
+            <input type="text" id="c-id" placeholder="3520112345678" maxlength="13" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="user"></i> Full Name</label>
+            <input type="text" id="c-name" placeholder="Candidate Name" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="calendar"></i> Age</label>
+            <input type="number" id="c-age" placeholder="25" min="25" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="map"></i> Constituency / Region</label>
+            <input type="text" id="c-region" placeholder="e.g. NA-120 Lahore" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="flag"></i> Political Party</label>
+            <input type="text" id="c-party" placeholder="e.g. PTI, PMLN, PPP" />
+          </div>
+          <div class="field">
+            <label><i data-lucide="book-open"></i> Education / Metadata</label>
+            <input type="text" id="c-meta" placeholder="Educational Qualifications" />
+          </div>
+          <div class="field full">
+            <label><i data-lucide="file-text"></i> Manifesto / Vision</label>
+            <textarea id="c-manifesto" rows="4" placeholder="Your promises to the constituency..."></textarea>
+          </div>
+          <div class="field full">
+            <button class="btn-primary" onclick="registerCandidate()">
+              <i data-lucide="send"></i> Submit Nomination
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vote Panel -->
+    <div class="panel" id="panel-vote">
+      <div class="glass-card">
+        <div class="card-header">
+          <i data-lucide="check-square" class="header-icon"></i>
+          <h2>Cast Your Ballot</h2>
+        </div>
+        <p style="color: var(--text-dim); margin-bottom: 40px;">Enter your CNIC to load approved candidates for your
+          region.</p>
+        <div class="form-grid" style="margin-bottom: 40px;">
+          <div class="field">
+            <label><i data-lucide="credit-card"></i> Your CNIC Number</label>
+            <input type="text" id="vote-id" placeholder="3520112345678" maxlength="13" />
+          </div>
+          <div class="field" style="justify-content: flex-end;">
+            <button class="btn-primary" onclick="loadBallot()" style="width: 100%;">
+              <i data-lucide="search"></i> Load Candidates
+            </button>
+          </div>
+        </div>
+
+        <div id="ballot-container" class="candidate-grid">
+          <!-- Loaded dynamically -->
+        </div>
+
+        <div id="selected-confirm"
+          style="display:none; margin-top: 50px; padding-top: 40px; border-top: 1px solid var(--glass-border); text-align: center;">
+          <h3 id="selected-name" style="margin-bottom: 25px; font-size: 1.5rem;">Selected: None</h3>
+          <button class="btn-primary" onclick="castVote()" style="margin: 0 auto; width: 300px;">
+            <i data-lucide="check-circle-2"></i> Cast Final Vote
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="panel" id="panel-results">
+      <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+          <div class="card-header" style="margin:0;">
+            <i data-lucide="bar-chart-3" class="header-icon"></i>
+            <h2>Live Results</h2>
+          </div>
+          <button class="tab-btn" style="border: 1px solid var(--glass-border);" onclick="updateStats()">
+            <i data-lucide="refresh-cw"></i> Sync
+          </button>
+        </div>
+        <div id="results-list">
+          <!-- Results go here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="panel" id="panel-admin">
+      <div class="form-grid">
+        <div class="glass-card">
+          <div class="card-header">
+            <i data-lucide="play-circle" class="header-icon"></i>
+            <h3>Election Setup</h3>
+          </div>
+          <div class="field" style="margin-top: 25px;">
+            <label>Election Name</label>
+            <input type="text" id="a-name" placeholder="General Election 2024" />
+          </div>
+          <div class="field" style="margin-top: 20px;">
+            <label>Duration (Seconds)</label>
+            <input type="number" id="a-duration" placeholder="86400" />
+          </div>
+          <button class="btn-primary" onclick="createElection()" style="margin-top: 30px; width: 100%;">
+            <i data-lucide="play"></i> Initiate Election
+          </button>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header">
+            <i data-lucide="user-check" class="header-icon"></i>
+            <h3>Candidate Vetting</h3>
+          </div>
+          <div class="field" style="margin-top: 25px;">
+            <label>Candidate ID</label>
+            <input type="number" id="a-cid" placeholder="1" />
+          </div>
+          <button class="btn-primary" onclick="approveCandidate()" style="margin-top: 30px; width: 100%;">
+            <i data-lucide="check-square"></i> Approve for Ballot
+          </button>
+        </div>
+
+        <div class="glass-card full" style="margin-top: 30px; border-color: rgba(244, 63, 94, 0.3);">
+          <div class="card-header">
+            <i data-lucide="trash-2" class="header-icon" style="color: var(--error);"></i>
+            <h3 style="color: var(--error);">Data Management</h3>
+          </div>
+          <p style="color: var(--text-dim); margin: 15px 0;">Remove incorrect registrations or ineligible participants.
+          </p>
+          <div class="form-grid">
+            <div class="field">
+              <label>Candidate ID to Delete</label>
+              <div style="display: flex; gap: 10px;">
+                <input type="number" id="del-cid" placeholder="1" style="flex: 1;" />
+                <button class="btn-primary" onclick="deleteCandidate()"
+                  style="background: var(--error); width: auto; padding: 0 20px;">
+                  <i data-lucide="user-minus"></i> Delete
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Voter CNIC to Delete</label>
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="del-v-cnic" placeholder="3520112345678" maxlength="13" style="flex: 1;" />
+                <button class="btn-primary" onclick="deleteVoter()"
+                  style="background: var(--error); width: auto; padding: 0 20px;">
+                  <i data-lucide="user-minus"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card full" style="margin-top: 30px;">
+          <div class="card-header">
+            <i data-lucide="alert-triangle" class="header-icon" style="color: var(--error);"></i>
+            <h3 style="color: var(--error);">Control Panel</h3>
+          </div>
+          <p style="color: var(--text-dim); margin-top: 15px;">Ending the election session will permanently disable
+            voting and finalize results.</p>
+          <button class="btn-primary" onclick="endElection()" style="margin-top: 30px; background: var(--error);">
+            <i data-lucide="stop-circle"></i> End Election Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span class="footer-logo">JAMHURIAT</span>
+    <p style="color: var(--text-dim);">Developed By Muhammad Jawad Raza 😎!</p>
+    <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px;">
+      <i data-lucide="globe" style="cursor:pointer; opacity: 0.6;"></i>
+      <i data-lucide="share-2" style="cursor:pointer; opacity: 0.6;"></i>
+      <i data-lucide="user-check" style="cursor:pointer; opacity: 0.6;"></i>
+    </div>
+  </footer>
+
+  <!-- UI Components -->
+  <div id="toast">Message</div>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+    <p style="margin-top: 25px; font-weight: 700; color: var(--accent-color);" id="loaderText">Accessing Blockchain...
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>
